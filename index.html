@@ -13,7 +13,1024 @@
   --accom:#7c3aed;--accom-bg:#f5f3ff;--accom-border:#c4b5fd;
   --bg:#f1f5f9;--card:#fff;--border:#e2e8f0;
   --text:#0f172a;--muted:#64748b;--heading:#1e293b;
+}<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌍 Europa 2026 — Oct 5–27 — Itinerario</title>
+<style>
+:root {
+  --free:#16a34a;--free-bg:#f0fdf4;--free-border:#86efac;
+  --paid:#d97706;--paid-bg:#fffbeb;--paid-border:#fcd34d;
+  --transport:#2563eb;--transport-bg:#eff6ff;--transport-border:#93c5fd;
+  --food:#db2777;--food-bg:#fdf2f8;--food-border:#f9a8d4;
+  --accom:#7c3aed;--accom-bg:#f5f3ff;--accom-border:#c4b5fd;
+  --bg:#f1f5f9;--card:#fff;--border:#e2e8f0;
+  --text:#0f172a;--muted:#64748b;--heading:#1e293b;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#0f2448 0%,#1e3a8a 50%,#4c1d95 100%);color:#fff;padding:20px 20px 16px}
+.header h1{font-size:1.5rem;font-weight:800;margin-bottom:3px}
+.header p{opacity:.8;font-size:.85rem}
+.kpi-row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.kpi{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 14px;min-width:120px}
+.kpi-label{font-size:.65rem;opacity:.75;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:1.2rem;font-weight:800;margin-top:2px}
+.kpi-sub{font-size:.65rem;opacity:.7;margin-top:1px}
+.savings-chip{background:#16a34a;border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;gap:4px;margin-top:8px}
+
+/* LEGEND */
+.legend{display:flex;gap:10px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center}
+.leg{display:flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;color:var(--muted)}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.badge{font-size:.62rem;padding:2px 6px;border-radius:8px;font-weight:700;white-space:nowrap}
+.b-free{background:var(--free);color:#fff}
+.b-star{background:#f59e0b;color:#fff}
+.b-book{background:#ef4444;color:#fff}
+.b-save{background:#0d9488;color:#fff}
+
+/* TABS */
+.tabs{display:flex;gap:4px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:5px 12px;border-radius:16px;font-size:.78rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);white-space:nowrap;transition:all .15s}
+.tab:hover,.tab.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 180px)}
+.main{flex:1;padding:14px;min-width:0}
+.sidebar{width:270px;flex-shrink:0;background:#fff;border-left:1px solid var(--border);padding:14px;overflow-y:auto;max-height:calc(100vh - 180px);position:sticky;top:0}
+
+/* DAY CARD */
+.day-card{background:#fff;border-radius:12px;border:1px solid var(--border);margin-bottom:12px;overflow:hidden}
+.day-card.hidden{display:none}
+.day-header{padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background .15s}
+.day-header:hover{background:#f8fafc}
+.day-num{width:46px;height:46px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0;color:#fff;line-height:1.1}
+.day-info{flex:1;min-width:0}
+.day-title{font-weight:700;font-size:.92rem;color:var(--heading)}
+.day-sub{font-size:.73rem;color:var(--muted);margin-top:2px}
+.day-costs{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.cost-unit{font-size:.7rem;color:var(--muted)}
+.cost-total{font-size:1rem;font-weight:800;color:var(--heading)}
+.cost-pax{font-size:.72rem;color:var(--muted)}
+.chevron{font-size:.85rem;color:var(--muted);transition:transform .2s;margin-left:4px}
+.day-card.open .chevron{transform:rotate(180deg)}
+
+/* ACTIVITIES */
+.activities{display:none;padding:0 14px 14px}
+.day-card.open .activities{display:block}
+
+/* COST TABLE HEADER */
+.cost-header{display:grid;grid-template-columns:1fr 70px 70px;gap:6px;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:4px 0 6px;border-bottom:1px dashed var(--border);margin-bottom:8px}
+.cost-header span:last-child,.cost-header span:nth-child(2){text-align:right}
+
+/* ACTIVITY ROW */
+.act-row{display:grid;grid-template-columns:1fr 70px 70px;gap:6px;align-items:start;margin-bottom:8px}
+.act-main{display:flex;gap:8px;align-items:start;min-width:0}
+.act-timeline{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0;margin-top:3px}
+.act-dot2{width:10px;height:10px;border-radius:50%;border:2px solid #fff;flex-shrink:0}
+.act-vline{width:2px;flex:1;min-height:16px;margin-top:2px;border-radius:1px}
+.act-body{flex:1;min-width:0}
+.act-time-label{font-size:.65rem;font-weight:700;color:var(--muted);margin-bottom:2px}
+.act-card{border-radius:7px;border:1.5px solid;padding:7px 9px}
+.act-card.free{border-color:var(--free-border);background:var(--free-bg)}
+.act-card.paid{border-color:var(--paid-border);background:var(--paid-bg)}
+.act-card.transport{border-color:var(--transport-border);background:var(--transport-bg)}
+.act-card.food{border-color:var(--food-border);background:var(--food-bg)}
+.act-card.accom{border-color:var(--accom-border);background:var(--accom-bg)}
+.act-name{font-weight:700;font-size:.82rem;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.act-desc{font-size:.73rem;color:var(--muted);margin-top:2px;line-height:1.4}
+.act-save-tip{font-size:.7rem;font-weight:600;color:#0d9488;margin-top:4px;background:#f0fdfa;border-radius:4px;padding:3px 6px;border-left:3px solid #0d9488}
+.cost-cell{text-align:right;padding-top:24px}
+.cost-pax-val{font-size:.82rem;font-weight:700}
+.cost-total-val{font-size:.82rem;font-weight:800}
+.cost-free{color:var(--free)}
+.cost-paid{color:var(--paid)}
+.cost-transport{color:var(--transport)}
+.cost-food{color:var(--food)}
+.cost-accom{color:var(--accom)}
+
+/* DAY TOTAL ROW */
+.day-total-row{display:grid;grid-template-columns:1fr 70px 70px;gap:6px;border-top:2px solid var(--border);margin-top:8px;padding-top:8px}
+.day-total-label{font-size:.78rem;font-weight:700;color:var(--heading)}
+.day-total-pax{text-align:right;font-size:.78rem;font-weight:700;color:var(--heading)}
+.day-total-3pax{text-align:right;font-size:.88rem;font-weight:800;color:#1e3a8a;background:#eff6ff;border-radius:6px;padding:2px 6px}
+
+/* SIDEBAR */
+.sidebar h3{font-size:.8rem;font-weight:800;color:var(--heading);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid var(--border)}
+.s-section{margin-bottom:18px}
+
+/* BUDGET TABLE */
+.bud-row{display:flex;justify-content:space-between;font-size:.77rem;padding:4px 0;border-bottom:1px solid #f1f5f9}
+.bud-row.total-row{border-top:2px solid var(--border);border-bottom:none;padding-top:8px;font-weight:800;font-size:.82rem}
+.bud-pax{color:var(--muted);font-size:.72rem}
+.bud-amounts{text-align:right}
+.bud-3pax{font-weight:700}
+
+/* GRAND TOTAL BOX */
+.grand-total{background:linear-gradient(135deg,#0f2448,#1e3a8a);color:#fff;border-radius:12px;padding:14px;margin:10px 0;text-align:center}
+.gt-eur{font-size:1.6rem;font-weight:900}
+.gt-usd{font-size:1rem;font-weight:700;opacity:.85;margin-top:2px}
+.gt-pax{font-size:.72rem;opacity:.7;margin-top:4px}
+.gt-bar{height:5px;background:rgba(255,255,255,.2);border-radius:3px;margin-top:10px;overflow:hidden}
+.gt-fill{height:100%;background:#34d399;border-radius:3px;width:72%}
+.gt-save{font-size:.7rem;opacity:.75;margin-top:5px}
+
+/* SAVINGS CARDS */
+.save-card{background:#f0fdf4;border:1px solid var(--free-border);border-radius:8px;padding:9px;margin-bottom:7px}
+.save-card strong{color:var(--free);font-size:.75rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.save-amount{background:var(--free);color:#fff;border-radius:8px;padding:1px 7px;font-size:.68rem}
+.save-card p{font-size:.72rem;color:var(--muted);line-height:1.4}
+
+/* CHECKLIST */
+.check-item{display:flex;align-items:flex-start;gap:8px;padding:7px 8px;border-radius:8px;font-size:.75rem;margin-bottom:4px;border:1.5px solid transparent;transition:all .2s}
+.check-item.urgent-item{background:#fff1f2;border-color:#fca5a5}
+.check-item.normal-item{background:#f8fafc;border-color:#e2e8f0}
+.check-item.done-item{background:#f0fdf4;border-color:#86efac;opacity:.75}
+.chk{width:18px;height:18px;border-radius:5px;border:2px solid #cbd5e1;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-top:1px}
+.chk.done{background:var(--free);border-color:var(--free)}
+.chk.done::after{content:'✓';color:#fff;font-size:11px;font-weight:800}
+.check-link{font-weight:700;text-decoration:none;display:block}
+.check-link.urgent{color:#dc2626}
+.check-link:not(.urgent){color:#2563eb}
+.check-when{color:var(--muted);font-size:.68rem;margin-top:1px}
+.check-status-done{font-size:.65rem;font-weight:800;color:#16a34a;background:#dcfce7;padding:1px 6px;border-radius:6px;display:inline-block;margin-top:2px}
+
+/* ALERT BAR */
+.alert-bar{background:linear-gradient(135deg,#7f1d1d,#dc2626);color:#fff;padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.alert-bar-title{font-weight:800;font-size:.85rem}
+.alert-chip{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:16px;padding:3px 10px;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.alert-chip:hover{background:rgba(255,255,255,.35)}
+.alert-chip.done-chip{background:rgba(22,163,74,.4);border-color:rgba(134,239,172,.5);text-decoration:line-through;opacity:.7}
+.alert-count{background:#fff;color:#dc2626;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.78rem;flex-shrink:0}
+
+/* SITE LINK BAR */
+.site-bar{background:#1e3a8a;color:#fff;padding:7px 20px;display:flex;align-items:center;gap:10px;font-size:.78rem}
+.site-bar a{color:#93c5fd;font-weight:700;text-decoration:none}
+.site-bar a:hover{color:#fff}
+
+/* NOTES PER ACTIVITY */
+.note-display{display:flex;justify-content:space-between;align-items:flex-start;border-radius:8px;padding:8px 10px;margin-top:6px;gap:8px}
+.note-display.note-reserva{background:#dcfce7;border:1.5px solid #86efac}
+.note-display.note-comentario{background:#fefce8;border:1.5px solid #fcd34d}
+.note-type-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.note-reserva .note-type-label{color:#16a34a}
+.note-comentario .note-type-label{color:#b45309}
+.note-text{font-size:.78rem;color:#1e293b;font-weight:600;line-height:1.4;white-space:pre-wrap;word-break:break-word}
+.note-date{font-size:.62rem;color:#64748b;margin-top:4px}
+.note-edit-btn,.note-del-btn{border:none;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.note-edit-btn{background:#e0f2fe;color:#0369a1}
+.note-del-btn{background:#fee2e2;color:#dc2626}
+.note-edit-btn:hover{background:#bae6fd}.note-del-btn:hover{background:#fecaca}
+.note-form-wrap{background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:8px;padding:10px;margin-top:6px}
+.note-textarea{width:100%;border:1.5px solid #cbd5e1;border-radius:6px;padding:7px 9px;font-size:.78rem;font-family:inherit;resize:vertical;min-height:60px;color:#1e293b;outline:none;transition:border-color .15s}
+.note-textarea:focus{border-color:#2563eb;box-shadow:0 0 0 2px #bfdbfe}
+.note-save-btn{background:#16a34a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.75rem;font-weight:700;cursor:pointer}
+.note-save-btn:hover{background:#15803d}
+.note-cancel-btn{background:#f1f5f9;color:#64748b;border:1.5px solid #cbd5e1;border-radius:6px;padding:5px 10px;font-size:.75rem;font-weight:600;cursor:pointer}
+.note-cancel-btn:hover{background:#e2e8f0}
+.note-add-btn{width:100%;margin-top:6px;background:none;border:1.5px dashed #cbd5e1;border-radius:6px;padding:5px 10px;font-size:.73rem;font-weight:600;color:#94a3b8;cursor:pointer;text-align:left;transition:all .15s}
+.note-add-btn:hover{background:#f1f5f9;border-color:#94a3b8;color:#475569}
+.note-add-btn.has-note{border-color:#86efac;color:#16a34a;background:#f0fdf4}
+.note-add-btn.has-note:hover{background:#dcfce7}
+
+/* TRAIN ROUTE */
+.route-box{background:#f8fafc;border:1px solid var(--border);border-radius:10px;padding:10px}
+.route-stop{display:flex;align-items:center;gap:7px;font-size:.74rem;padding:3px 0}
+.route-dot{width:9px;height:9px;border-radius:50%;background:#2563eb;flex-shrink:0}
+.route-line{width:2px;height:14px;background:#bfdbfe;margin-left:3.5px}
+.route-price{margin-left:auto;font-size:.68rem;font-weight:700;color:var(--transport);background:var(--transport-bg);padding:2px 6px;border-radius:4px;white-space:nowrap}
+
+@media(max-width:768px){.sidebar{display:none}.layout{display:block}}
+
+/* PUBLISH GUIDE */
+.publish-opt{background:#f8fafc;border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:8px}
+.pub-title{font-size:.76rem;font-weight:800;color:var(--heading);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.pub-badge{font-size:.6rem;padding:1px 7px;border-radius:6px;font-weight:700;white-space:nowrap}
+.pub-badge.easiest{background:#7c3aed;color:#fff}
+.pub-badge.fast{background:#0d9488;color:#fff}
+.pub-badge.dev{background:#2563eb;color:#fff}
+.pub-steps{font-size:.71rem;color:var(--muted);line-height:1.8}
+.pub-steps a{color:#2563eb;font-weight:700;text-decoration:none}
+.pub-steps code{background:#e2e8f0;padding:1px 5px;border-radius:3px;font-family:monospace;font-size:.67rem;color:#1e293b}
+
+/* ⚽ REAL MADRID ALTERNATIVA */
+.alt-block{background:linear-gradient(135deg,#fff1f2 0%,#fef9f9 100%);border:2px solid #fca5a5;border-radius:10px;padding:12px 14px;margin-top:12px}
+.alt-header{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.9rem;color:#991b1b;margin-bottom:10px;padding-bottom:8px;border-bottom:2px dashed #fca5a5}
+.alt-header-badge{background:#dc2626;color:#fff;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:10px}
+.alt-table{width:100%;border-collapse:collapse;font-size:.77rem;margin-bottom:8px}
+.alt-table th{background:#fecaca;color:#7f1d1d;font-weight:700;padding:5px 8px;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:.3px}
+.alt-table th:last-child,.alt-table th:nth-child(2){text-align:right}
+.alt-table td{padding:5px 8px;border-bottom:1px solid #fee2e2;vertical-align:middle}
+.alt-table td:last-child,.alt-table td:nth-child(2){text-align:right;font-weight:700}
+.alt-table tr:last-child td{border-bottom:none}
+.alt-table tr.alt-highlight{background:#fff7f7;font-weight:700}
+.alt-warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:8px 10px;font-size:.73rem;color:#92400e;margin-bottom:8px}
+.alt-warn strong{color:#b45309;display:block;margin-bottom:2px}
+.alt-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.alt-link{font-size:.72rem;padding:4px 10px;border-radius:8px;text-decoration:none;font-weight:700;border:1.5px solid}
+.alt-link.primary{background:#dc2626;color:#fff;border-color:#dc2626}
+.alt-link.secondary{background:#fff;color:#2563eb;border-color:#93c5fd}
+.alt-tour{background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:9px 11px;margin-top:8px;font-size:.75rem}
+.alt-tour strong{color:#16a34a;display:block;margin-bottom:3px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌍 Europa 2026 — Itinerario Completo</h1>
+  <p>Portugal · España · Francia · Alsacia · Alemania · Italia &nbsp;·&nbsp; Oct 5 – Oct 27 · 3 personas · 22 días</p>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">Total Europa</div>
+      <div class="kpi-val">€4.630</div>
+      <div class="kpi-sub">3 personas · sin vuelos</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Por persona Europa</div>
+      <div class="kpi-val">€1.543</div>
+      <div class="kpi-sub">~$1.700 USD</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Vuelos inter.</div>
+      <div class="kpi-val">~$3.000</div>
+      <div class="kpi-sub">USD · 3 personas</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total estimado</div>
+      <div class="kpi-val">~$7.900</div>
+      <div class="kpi-sub">USD · vuelos+aloj+comida+transp+entradas</div>
+    </div>
+    <div class="kpi" style="background:rgba(52,211,153,.2);border-color:rgba(52,211,153,.4)">
+      <div class="kpi-label">Ahorro vs. precio normal</div>
+      <div class="kpi-val">$3.900</div>
+      <div class="kpi-sub">USD ahorrados 🎉</div>
+    </div>
+  </div>
+  <div class="savings-chip">💡 Oct 5–27 · ⚽ RM vs. Villarreal OCT 10–11 confirmado · Todos los costos incluidos</div>
+</div>
+
+<div class="site-bar">
+  🌐 Itinerario online:&nbsp;<a href="https://edwinfmartinez-blip.github.io/Itinerario-europa/" target="_blank">edwinfmartinez-blip.github.io/Itinerario-europa</a>
+  <span style="margin-left:auto;opacity:.6;font-size:.7rem">Comparte este link con el grupo</span>
+</div>
+<div class="alert-bar" id="alertBar">
+  <div class="alert-count" id="alertCount">!</div>
+  <div class="alert-bar-title">⚠️ RESERVAS URGENTES — Hacer YA:</div>
+  <div id="alertChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+</div>
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:var(--free)"></div>Gratis</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--paid)"></div>Entrada</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--transport)"></div>Transporte</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--food)"></div>Comida</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--accom)"></div>Alojamiento</div>
+  <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap">
+    <span class="badge b-free">GRATIS</span>
+    <span class="badge b-star">⭐ TOP</span>
+    <span class="badge b-book">📅 RESERVAR</span>
+    <span class="badge b-save">💰 AHORRO</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="filterDays('all',this)">📋 Todos los días</button>
+  <button class="tab" onclick="filterDays('pt',this)">🇵🇹 Lisboa (3d)</button>
+  <button class="tab" onclick="filterDays('es',this)">🇪🇸 Madrid (3d)</button>
+  <button class="tab" onclick="filterDays('fr',this)">🇫🇷 París (4d)</button>
+  <button class="tab" onclick="filterDays('al',this)">🏰 Alsacia (1d)</button>
+  <button class="tab" onclick="filterDays('de',this)">🇩🇪 Alemania (2d)</button>
+  <button class="tab" onclick="filterDays('fi',this)">🌸 Florencia (2d)</button>
+  <button class="tab" onclick="filterDays('it',this)">🏛️ Roma (7d)</button>
+</div>
+
+<div class="layout">
+<div class="main" id="main"></div>
+
+<div class="sidebar">
+
+  <div class="s-section">
+    <h3>💶 Presupuesto Completo</h3>
+    <div style="font-size:.68rem;color:var(--muted);margin-bottom:7px">✅ Todos los costos incluidos: vuelos · alojamiento · comida · transporte · entradas</div>
+    <div class="bud-row">
+      <span>🇵🇹 Lisboa (3n)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€420</div><div class="bud-pax">€140/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🇪🇸 Madrid (3n)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€390</div><div class="bud-pax">€130/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🇫🇷 París (4d)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€680</div><div class="bud-pax">€227/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🏰 Alsacia (1d)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€195</div><div class="bud-pax">€65/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🇩🇪 Alemania (2d)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€350</div><div class="bud-pax">€117/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🌸 Florencia (2d)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€450</div><div class="bud-pax">€150/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🏛️ Roma (7n)</span>
+      <div class="bud-amounts"><div class="bud-3pax">€1.510</div><div class="bud-pax">€503/pax</div></div>
+    </div>
+    <div class="bud-row">
+      <span>🚆 Transportes Europa</span>
+      <div class="bud-amounts"><div class="bud-3pax">€635</div><div class="bud-pax">€212/pax</div></div>
+    </div>
+    <div class="bud-row total-row">
+      <span>SUBTOTAL EUROPA</span>
+      <div class="bud-amounts"><div class="bud-3pax" style="color:#1e3a8a">€4.630</div><div class="bud-pax" style="font-weight:700">€1.543/pax</div></div>
+    </div>
+    <div style="height:6px"></div>
+    <div class="bud-row" style="background:#fefce8;border-radius:6px;padding:5px 6px;border:none">
+      <span>✈️ Vuelos BOG↔LIS + FCO↔BOG</span>
+      <div class="bud-amounts"><div class="bud-3pax">~$3.000 USD</div><div class="bud-pax">~$1.000/pax</div></div>
+    </div>
+    <div class="bud-row total-row" style="border-top:2px solid #1e3a8a;margin-top:4px">
+      <span>🌍 TOTAL TODO INCLUIDO</span>
+      <div class="bud-amounts"><div class="bud-3pax" style="color:#1e3a8a">~$7.900 USD</div><div class="bud-pax" style="font-weight:700;color:#1e3a8a">~$2.633/pax</div></div>
+    </div>
+    <div class="grand-total">
+      <div class="kpi-label" style="color:rgba(255,255,255,.7)">✅ TOTAL COMPLETO — TODOS LOS COSTOS</div>
+      <div class="gt-eur">~$7.900 USD</div>
+      <div class="gt-usd" style="font-size:.8rem;opacity:.9;margin-top:4px">€4.630 Europa + ~$3.000 vuelos · 3 personas</div>
+      <div class="gt-pax" style="margin-top:4px">Incluye: ✈️ vuelos · 🏠 alojamiento · 🍽️ comida · 🚅 transporte · 🎫 entradas</div>
+      <div class="gt-pax">~$2.633 USD por persona · todo incluido</div>
+      <div class="gt-bar"><div class="gt-fill"></div></div>
+      <div class="gt-save">Ahorro vs estimado turístico normal: ~$3.900 USD 🎉</div>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <h3>💰 Ahorros Extra Nuevos</h3>
+    <div class="save-card">
+      <strong>🎫 Paris Museum Pass (4 días) <span class="save-amount">€42 para 3</span></strong>
+      <p>€67/pax cubre: Louvre (€17) + Orsay (€16) + Versailles (€20) + Sainte-Chapelle (€13) + Arc de Triomphe (€13) = €79/pax. Ahorro: €12/pax = <strong>€36 total</strong>. Sin colas en cada museo.</p>
+    </div>
+    <div class="save-card">
+      <strong>🏛️ Roma Pass (48h) <span class="save-amount">€45 para 3</span></strong>
+      <p>€28/pax incluye: metro ilimitado + Coliseo/Foro (€18) + Borghese (€17) + 2 museos más con descuento. Total ahorrado en transporte + entradas: <strong>€15/pax</strong>.</p>
+    </div>
+    <div class="save-card">
+      <strong>🚶 Free Walking Tours <span class="save-amount">€0 (donación)</span></strong>
+      <p>SANDEMANs opera en Lisboa, Madrid, París, Roma, Florencia. Tours de 2–3h con guía local. Paga lo que quieras (€5–10 sugerido). Ahorro vs. tour pagado (~€25): <strong>~€45 para 3</strong>.</p>
+    </div>
+    <div class="save-card">
+      <strong>🌙 Tren nocturno Madrid→París <span class="save-amount">€90 para 3</span></strong>
+      <p>Trenhotel (Elipsos) o Renfe+SNCF nocturno: pagas el tren Y te ahorras 1 noche de hotel en Madrid o París. Sale a cuenta si el billete vale <strong>menos de €80/pax</strong> (buscar en Renfe).</p>
+    </div>
+    <div class="save-card">
+      <strong>🛒 Supermercado: desayunos+snacks <span class="save-amount">€130 para 3</span></strong>
+      <p>Si desayunas en supermercado (€3/pax) en vez de cafetería (€8/pax) los 22 días: ahorro de <strong>€5/pax/día × 22 días × 3 = €330</strong>. Pero siendo realistas 12 días: <strong>€180 para 3</strong>.</p>
+    </div>
+    <div class="save-card">
+      <strong>✈️ Día de vuelo: Lunes → ahorro <span class="save-amount">€150 para 3</span></strong>
+      <p>Volar lunes Oct 5 en lugar de domingo Oct 4: vuelos internacionales L–M son ~€50 más baratos por persona. Llegas Oct 6 a Lisboa. ✅ Ahorro ya incorporado en las fechas del itinerario.</p>
+    </div>
+  </div>
+
+  <div class="s-section">
+    <h3>📅 Checklist Reservas</h3>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">Haz clic en cada ítem cuando reserves → cambia a ✅ y desaparece de la barra roja</div>
+    <div id="checklist"></div>
+  </div>
+
+  <div class="s-section">
+    <h3>📤 Publicar Externamente</h3>
+    <div style="font-size:.72rem;color:var(--muted);margin-bottom:9px;line-height:1.5">Comparte este dashboard con cualquier persona. El archivo es un solo <code style="background:#e2e8f0;padding:1px 4px;border-radius:3px;font-size:.67rem">.html</code> — sin servidor, sin código extra.</div>
+
+    <div class="publish-opt">
+      <div class="pub-title">🟣 Netlify Drop <span class="pub-badge easiest">⭐ MÁS FÁCIL</span></div>
+      <div class="pub-steps">
+        1. Ve a <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a><br>
+        2. Arrastra el archivo <strong>.html</strong> ahí<br>
+        3. Obtienes URL tipo <code>abc123.netlify.app</code><br>
+        ✅ Gratis · Sin registro · En segundos
+      </div>
+    </div>
+
+    <div class="publish-opt">
+      <div class="pub-title">📎 Tiiny.host <span class="pub-badge fast">RÁPIDO</span></div>
+      <div class="pub-steps">
+        1. Ve a <a href="https://tiiny.host" target="_blank">tiiny.host</a><br>
+        2. Sube el archivo .html<br>
+        3. Obtienes un enlace para compartir<br>
+        ✅ Gratis · Pequeña marca de agua
+      </div>
+    </div>
+
+    <div class="publish-opt">
+      <div class="pub-title">🐙 GitHub Pages <span class="pub-badge dev">PERMANENTE</span></div>
+      <div class="pub-steps">
+        1. Crea cuenta en <a href="https://github.com" target="_blank">github.com</a><br>
+        2. Nuevo repo → sube el .html como <strong>index.html</strong><br>
+        3. Settings → Pages → Deploy from main<br>
+        URL: <code>tuusuario.github.io/repo</code><br>
+        ✅ Gratis · URL permanente · Sin marca de agua
+      </div>
+    </div>
+
+    <div style="background:#fefce8;border:1px solid #fcd34d;border-radius:8px;padding:8px;font-size:.7rem;color:#713f12;margin-top:2px">
+      💡 <strong>Tip:</strong> Después de publicar, puedes compartir el link por WhatsApp, email o donde quieras. Cualquier persona con el link puede verlo sin instalar nada.
+    </div>
+  </div>
+
+  <div class="s-section">
+    <h3>🚆 Ruta Europa</h3>
+    <div class="route-box">
+      <div class="route-stop"><div class="route-dot" style="background:#e11d48"></div><strong>Lisboa</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#e11d48"></div><span>✈️ vuelo 1h20</span><span class="route-price">€35–55/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#f59e0b"></div><strong>Madrid</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#f59e0b"></div><span>🚅 AVE+TGV 9h</span><span class="route-price">€80–130/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#2563eb"></div><strong>París</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#2563eb"></div><span>🚅 Ouigo 1h47</span><span class="route-price">€10–25/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#7c3aed"></div><strong>Estrasburgo</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#7c3aed"></div><span>🚅 ICE 45min</span><span class="route-price">€15–25/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#0d9488"></div><strong>Heidelberg</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#0d9488"></div><span>🚅 ICE 1h20</span><span class="route-price">€25–45/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#0d9488"></div><strong>Colonia</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#0d9488"></div><span>✈️ vuelo 1h45</span><span class="route-price">€40–70/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#d97706"></div><strong>Florencia</strong></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#d97706"></div><span>🚅 Frecciarossa 1h33</span><span class="route-price">€29–45/pax</span></div>
+      <div class="route-line"></div>
+      <div class="route-stop"><div class="route-dot" style="background:#ef4444"></div><strong>Roma ✈️ Bogotá</strong></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const C={free:'#16a34a',paid:'#d97706',transport:'#2563eb',food:'#db2777',accom:'#7c3aed'};
+const COLORS={pt:'#e11d48',es:'#f59e0b',fr:'#2563eb',al:'#7c3aed',de:'#0d9488',fi:'#d97706',it:'#16a34a'};
+const FLAG={pt:'🇵🇹',es:'🇪🇸',fr:'🇫🇷',al:'🏰',de:'🇩🇪',fi:'🌸',it:'🏛️'};
+
+// cost: [perPax, label] — 0 = gratis
+const days=[
+  {id:0,country:'pt',date:'Lun Oct 5',title:'Salida Bogotá ✈️',sub:'Aeropuerto El Dorado → Vuelo nocturno',
+   acts:[
+    {t:'18:00',type:'transport',name:'🚕 Taxi al aeropuerto El Dorado',desc:'Llegar 3h antes. Check-in, migración.',cost:[13,'Taxi ~$55.000 COP'],badges:[]},
+    {t:'21:00',type:'transport',name:'✈️ Vuelo BOG → Lisboa (overnight)',desc:'Vuelo nocturno ~11–12h. TAP Air Portugal recomendado. Precio: one-way incluyendo equipaje.',cost:[550,'USD one-way (incluir en presupuesto vuelos)'],badges:['RESERVAR']}
+   ]},
+  {id:1,country:'pt',date:'Mar Oct 6',title:'Llegada Lisboa 🛬',sub:'🇵🇹 Baixa · Chiado · Miradouros',
+   acts:[
+    {t:'11:00',type:'transport',name:'🚇 Metro aeropuerto → centro',desc:'Línea Vermelha, Baixa-Chiado. 25min.',cost:[1.65,'€/pax'],badges:[]},
+    {t:'12:00',type:'accom',name:'🏠 Check-in apartamento (Mouraria)',desc:'Mouraria o Intendente: €15 más baratos/noche que Chiado. Igual de bien ubicado.',cost:[27,'€/pax · noche'],badges:[]},
+    {t:'13:00',type:'food',name:'🍽️ Almuerzo tasca local',desc:'Sopa do dia + bacalhau à Brás + vinho da casa. Pide el menu do dia.',cost:[9,'€/pax'],badges:[]},
+    {t:'15:00',type:'free',name:'🆓 Baixa + Chiado + Praça do Comércio',desc:'Rua Augusta, Arco Triunfal, plaza frente al Tajo. El corazón pombalino de Lisboa.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:30',type:'free',name:'🆓 Bairro Alto + Miradouro Santa Catarina',desc:'Mejor vista del Tajo al atardecer. Ambiente local, músicos. El miradouro más bonito del día.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:30',type:'food',name:'🍷 Cena tasca Alfama',desc:'Bacalhau, sardinas o caldo verde. Vinho tinto alentejano de la casa.',cost:[13,'€/pax'],badges:[]}
+   ]},
+  {id:2,country:'pt',date:'Mié Oct 7',title:'Belém + Alfama 🏰',sub:'🇵🇹 Jerónimos · Pastéis · Castelo · Fado',
+   acts:[
+    {t:'07:30',type:'food',name:'☕ Desayuno supermercado',desc:'Yogur + baguette + fruta comprado la noche anterior. El ahorro más fácil del viaje.',cost:[3,'€/pax'],badges:['SAVE']},
+    {t:'09:30',type:'paid',name:'⭐ Mosteiro dos Jerónimos',desc:'UNESCO. Gótico manuelino. Tumba de Vasco da Gama. Llegar a la apertura (9:30am).',cost:[10,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'10:30',type:'food',name:'🥐 Pastéis de Belém (originales)',desc:'Los natas desde 1837. Comer 2–3 con canela. Icono absoluto de Lisboa.',cost:[4,'€/pax (3 pastéis)'],badges:[]},
+    {t:'11:00',type:'free',name:'🆓 Torre de Belém (exterior) + Jardins',desc:'La foto clásica sobre el Tajo. El exterior ya es impresionante. Interior (€6) no aporta mucho más.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'13:00',type:'food',name:'🍺 LX Factory + almuerzo',desc:'Mercado creativo en fábrica antigua. Cerveza artesanal local (~€3). Come algo del mercado.',cost:[10,'€/pax'],badges:[]},
+    {t:'15:00',type:'paid',name:'⭐ Castelo de São Jorge',desc:'Vista 360° de Lisboa y el Tajo. El mirador más completo de la ciudad. Vale absolutamente la pena.',cost:[15,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'17:00',type:'free',name:'🆓 Barrio Alfama + Miradouros da Graça y Santa Luzia',desc:'Laberinto medieval. Miradouro da Graça = mejor vista de Lisboa. Santa Luzia = romántico con azulejos.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'21:00',type:'food',name:'🎶 Cena con Fado (opcional)',desc:'Tasca con Fado en vivo en Alfama. Consumición mínima incluye música. Experiencia única de Lisboa.',cost:[14,'€/pax'],badges:[]}
+   ]},
+  {id:3,country:'pt',date:'Jue Oct 8',title:'Sintra 🏰',sub:'🇵🇹 Pena · Regaleira · Pueblo medieval',
+   acts:[
+    {t:'08:15',type:'transport',name:'🚂 Tren Rossio → Sintra (ida/vuelta)',desc:'Sale cada 20min. 40min de viaje. Muy cómodo y frecuente.',cost:[4.70,'€/pax (ida+vuelta)'],badges:[]},
+    {t:'09:30',type:'paid',name:'⭐ Palácio da Pena',desc:'El palacio de cuento de hadas más bello de Portugal. Llegar cuando abre. 2h mínimo adentro.',cost:[14,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'12:00',type:'free',name:'🆓 Parque da Pena',desc:'Incluido en la entrada del Palacio. Árboles centenarios, helechos gigantes, lagos. Muy tranquilo.',cost:[0,'Incluido en Pena'],badges:['FREE']},
+    {t:'13:30',type:'food',name:'🥐 Almuerzo Sintra pueblo',desc:'Travesseiros en Piriquita (€2 c/u) o sándwich. Evita restaurantes con carta turística.',cost:[6,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'paid',name:'⭐ Quinta da Regaleira',desc:'El sitio más misterioso de Portugal. Pozos iniciáticos masónicos en espiral. Muy especial y diferente.',cost:[12,'€/pax'],badges:['TOP']},
+    {t:'16:30',type:'free',name:'🆓 Sintra pueblo centro',desc:'Callejuelas medievales. Palácio Nacional de Sintra: fachada blanca gratis desde el exterior.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'🍷 Última cena en Lisboa',desc:'Caldo verde, vinho verde, pastel de bacalhau. Disfruta la despedida portuguesa.',cost:[15,'€/pax'],badges:[]}
+   ]},
+  {id:4,country:'es',date:'Vie Oct 9',title:'Lisboa → Madrid 🇪🇸',sub:'✈️ Vuelo + Plaza Mayor + La Latina',
+   acts:[
+    {t:'08:00',type:'transport',name:'✈️ Vuelo LIS → MAD (Ryanair/Vueling)',desc:'1h20min. Reservar con anticipación. Mucho mejor que el bus (8h, mismo precio).',cost:[42,'€/pax'],badges:['RESERVAR','SAVE']},
+    {t:'12:00',type:'transport',name:'🚇 Metro Barajas → centro Madrid',desc:'Línea 8 + transbordo. ~45min. Tarjeta turista aeropuerto obligatoria.',cost:[5,'€/pax'],badges:[]},
+    {t:'13:00',type:'accom',name:'🏠 Check-in Madrid (Lavapiés/Malasaña)',desc:'Lavapiés o Antón Martín: €15–20 más baratos/noche que Chueca o Sol. 10min metro del centro.',cost:[27,'€/pax · noche'],badges:['SAVE']},
+    {t:'14:00',type:'food',name:'🍺 Menú del día La Latina',desc:'Primer plato + segundo + postre + vino = €11–13. El mejor ahorro gastronómico de España.',cost:[12,'€/pax'],badges:['SAVE']},
+    {t:'15:30',type:'free',name:'🆓 Plaza Mayor + Barrio La Latina',desc:'La plaza más histórica de Madrid. La Latina: tabernas medievales, callejuelas empedradas.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:30',type:'free',name:'🆓 Mercado San Miguel + Gran Vía',desc:'Mercado gourmet gratis entrar. Tapas desde €2. Gran Vía: arquitectura art-déco impresionante.',cost:[0,'Gratis (tapear ~€8)'],badges:['FREE']},
+    {t:'19:30',type:'free',name:'🆓 Parque del Retiro + Palacio de Cristal',desc:'El pulmón verde de Madrid. Palacio de Cristal: exposiciones gratuitas. Perfecto al atardecer.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'21:00',type:'food',name:'🥘 Cena tapas taberna',desc:'Tortilla española, croquetas de jamón, boquerones. Barrio de La Latina.',cost:[13,'€/pax'],badges:[]}
+   ]},
+  {id:5,country:'es',date:'Sáb Oct 10',title:'Madrid Museos + ⚽ Bernabéu',sub:'🇪🇸 Prado (gratis 18h) · Reina Sofía · ⚽ RM vs. Villarreal',
+   acts:[
+    {t:'08:00',type:'food',name:'☕ Churros con chocolate',desc:'La cafetería española de desayuno más icónica. Café con leche + churros.',cost:[5,'€/pax'],badges:[]},
+    {t:'09:00',type:'paid',name:'⭐ Museo del Prado',desc:'Las Meninas, El Bosco, Goya. Top-3 museos del mundo. TRUCO: gratis L–Sáb 18–20h (ahorra €15/pax = €45 para 3).',cost:[15,'€/pax (o €0 entrando 18h)'],badges:['TOP','SAVE']},
+    {t:'13:00',type:'food',name:'🍽️ Almuerzo Barrio de las Letras',desc:'Menú del día en Calle Moratín o Huertas. Zona literaria con buena relación calidad/precio.',cost:[12,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'paid',name:'⭐ Museo Reina Sofía (Guernica)',desc:'La pintura más importante del s.XX. TRUCO: gratis L/Mié–Sáb 19–21h y Dom 12:30–14:30 (€12/pax ahorrado).',cost:[12,'€/pax (o €0 en horario gratis)'],badges:['TOP','SAVE']},
+    {t:'17:00',type:'free',name:'🆓 Paseo del Prado + Cibeles',desc:'El bulevar más elegante de Madrid. Fuente de Cibeles, Neptuno. Plaza de Cibeles = foto clásica.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:30',type:'food',name:'🍺 Vermut y tapas La Latina',desc:'El ritual del vermut madrileño. Patatas bravas, croquetas, boquerones. Tradición de viernes.',cost:[10,'€/pax'],badges:[]},
+    {t:'21:00',type:'food',name:'🥪 Bocadillo de calamares icónico',desc:'Bar La Campana en Plaza Mayor. El bocadillo más famoso de España a €3.50. Cena low-cost de lujo.',cost:[4,'€/pax'],badges:['SAVE']}
+   ]},
+  {id:6,country:'es',date:'Dom Oct 11',title:'Madrid → París 🚅',sub:'🇪🇸→🇫🇷 Templo Debod · AVE · TGV (Ouigo)',
+   acts:[
+    {t:'07:30',type:'free',name:'⭐ 🆓 Templo de Debod (amanecer)',desc:'Templo egipcio de 2.200 años. Las mejores vistas de Madrid al amanecer. El secreto más bello de Madrid.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'09:00',type:'free',name:'🆓 Palacio Real (exterior) + Plaza de Oriente',desc:'Fachada más impresionante de Madrid. Jardines de Sabatini gratis. Foto perfecta.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'10:30',type:'food',name:'🥐 Brunch en Malasaña',desc:'Cafés con encanto. Tosta + zumo. El barrio más cool de Madrid para el último desayuno.',cost:[7,'€/pax'],badges:[]},
+    {t:'13:00',type:'transport',name:'🧳 Consigna Atocha + almuerzo',desc:'Deja maletas (€5–6/bolso) y come algo cerca de la estación antes del tren.',cost:[5,'€ consigna+€6 almuerzo/pax'],badges:[]},
+    {t:'15:30',type:'transport',name:'🚅 AVE Madrid → Barcelona (Ouigo/Iryo)',desc:'Chamartín→Sants. 2h45min. Ouigo o Iryo son €20–30 más baratos que RENFE. Reservar 2+ meses antes.',cost:[38,'€/pax (Ouigo)'],badges:['RESERVAR','SAVE']},
+    {t:'18:30',type:'transport',name:'🚅 TGV Barcelona → París (Ouigo)',desc:'Sants→Gare de Lyon. 6h20min. Con Ouigo desde €10. Reservar 2+ meses antes.',cost:[18,'€/pax (Ouigo)'],badges:['RESERVAR','SAVE']},
+    {t:'01:30',type:'accom',name:'🏠 Check-in París (zona Bastille/Nation)',desc:'Este de París: €20–25 más barato/noche que Marais o Saint-Germain. Igual de bien conectado por metro.',cost:[37,'€/pax · noche'],badges:['SAVE']}
+   ]},
+  {id:7,country:'fr',date:'Lun Oct 12',title:'París: Montmartre + Marais 🎨',sub:'🇫🇷 Sacré-Cœur · Musée Carnavalet · Île de la Cité',
+   acts:[
+    {t:'08:00',type:'food',name:'☕ Desayuno boulangerie local',desc:'Baguette tradition + café noisette. Evita Starbucks y grandes cadenas. El más auténtico.',cost:[4,'€/pax'],badges:['SAVE']},
+    {t:'09:00',type:'free',name:'🆓 Montmartre + Sacré-Cœur',desc:'Barrio bohemio con callejuelas, artistas en Place du Tertre. Sacré-Cœur: interior gratis, vista desde la escalinata espectacular.',cost:[0,'Gratis (funicular €2 opcional)'],badges:['FREE','TOP']},
+    {t:'12:30',type:'food',name:'🥙 Crêpe callejera Montmartre',desc:'Crêpe jamón + queso de puesto callejero. El almuerzo más parisino y asequible.',cost:[7,'€/pax'],badges:['SAVE']},
+    {t:'14:00',type:'free',name:'⭐ 🆓 Le Marais + Place des Vosges',desc:'La plaza más antigua y bella de París (1612). Pasear el Marais = historia y arquitectura sin precio de entrada.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'14:30',type:'free',name:'⭐ 🆓 Musée Carnavalet',desc:'Historia de París desde la prehistoria. COMPLETAMENTE GRATIS. Joya oculta en un hôtel particulier del s.XVII. Tan bueno como pagar €17 en otro museo.',cost:[0,'Gratis'],badges:['FREE','TOP','SAVE']},
+    {t:'17:00',type:'free',name:'🆓 Île de la Cité + Notre-Dame + Pont Neuf',desc:'La isla donde nació París. Notre-Dame exterior restaurada. Pont Neuf. Paseo gratis por el corazón histórico.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:00',type:'food',name:'⭐ 🥖 Picnic orillas del Sena',desc:'Baguette + brie + jamón + vino €5 en Monoprix. Picnic con vista a la Île de la Cité. €8 TOTAL para 3 vs. €60 en restaurante.',cost:[3,'€/pax (€8–10 total)'],badges:['TOP','SAVE']},
+    {t:'21:00',type:'free',name:'🆓 Paseo puentes iluminados',desc:'Pont des Arts, Pont au Change. Los puentes iluminados de París de noche = absolutamente gratis y absolutamente increíble.',cost:[0,'Gratis'],badges:['FREE']}
+   ]},
+  {id:8,country:'fr',date:'Mar Oct 13',title:'Louvre + Trocadéro 🗺️',sub:'🇫🇷 Mona Lisa · Champs-Élysées · Torre Eiffel exterior',
+   acts:[
+    {t:'09:00',type:'paid',name:'⭐ Musée du Louvre',desc:'Venus de Milo, Mona Lisa, Niké alada. Musée le más visitado del mundo. Reservar online obligatorio (evita 2h de cola).',cost:[17,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'13:00',type:'food',name:'🥗 Picnic Jardin des Tuileries',desc:'Sándwich o baguette de puesto exterior. €5–7 vs €18+ en restaurante interno del jardín.',cost:[6,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'free',name:'🆓 Champs-Élysées + Arc de Triomphe (exterior)',desc:'El bulevar más famoso del mundo. Caminata de 1.8km. Arc de Triomphe: foto gratis desde la rotonda.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:30',type:'free',name:'⭐ 🆓 Trocadéro (mejor foto Torre Eiffel)',desc:'La vista perfecta de la Torre Eiffel, sin subir. La mejor fotografía de París completamente gratis. Espectacular al atardecer.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'18:00',type:'free',name:'🆓 Champ de Mars',desc:'Parque al pie de la Torre Eiffel. Picnic, músicos, familias. Ver la torre desde abajo es tan impresionante como desde arriba.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:30',type:'food',name:'🧆 Cena falafel Marais',desc:'Rue des Rosiers: L\'As du Fallafel. Los mejores falafels de París. La mejor relación calidad/precio de la ciudad.',cost:[9,'€/pax'],badges:['SAVE']},
+    {t:'21:00',type:'free',name:'✨ 🆓 Espectáculo de luces Torre Eiffel',desc:'Cada hora en punto: 5 minutos de luces titilantes. Desde Trocadéro o Champ de Mars. GRATIS y absolutamente mágico.',cost:[0,'Gratis'],badges:['FREE','TOP']}
+   ]},
+  {id:9,country:'fr',date:'Mié Oct 14',title:'Torre Eiffel ⭐ + Orsay 🖼️',sub:'🇫🇷 Cumbre Torre Eiffel · Impresionismo',
+   acts:[
+    {t:'07:30',type:'food',name:'☕ Desayuno supermercado',desc:'Monoprix: yogur + baguette + zumo. €3 vs €12 en cafetería turística. Ahorro del día.',cost:[3,'€/pax'],badges:['SAVE']},
+    {t:'09:00',type:'paid',name:'⭐ Torre Eiffel — Cima en ascensor 🗼',desc:'Subir a los 276m. Vista de toda Île-de-France. RESERVAR CON 60 DÍAS ANTES en toureiffel.paris (se agota en horas el mismo día de apertura).',cost:[26.10,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'11:30',type:'free',name:'🆓 Rue Cler (mercado callejero típico)',desc:'El mercado de barrio más parisino. Comprar queso, charcuterie, fruta fresca para picnic. Completamente gratis pasear.',cost:[0,'Gratis (compras €4)'],badges:['FREE']},
+    {t:'13:00',type:'food',name:'🧀 Picnic Champ de Mars',desc:'Comida de Rue Cler con vista a la Torre Eiffel. El almuerzo más parisino posible al precio más bajo.',cost:[4,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'paid',name:'⭐ Musée d\'Orsay',desc:'Monet, Renoir, Van Gogh, Degas. En una estación de tren del s.XIX reconvertida. Arte impresionista en el mejor marco arquitectónico.',cost:[16,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'17:30',type:'free',name:'🆓 Saint-Germain + Jardín de Luxemburgo',desc:'Barrio literario de París. Jardín de Luxemburgo: gratis, uno de los parques más bellos de Europa.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:30',type:'food',name:'🥗 Cena bistrot de barrio',desc:'Steak-frites o quiche + vino de la casa. Busca menú de noche. Evita restaurantes con foto en el menú.',cost:[20,'€/pax'],badges:[]}
+   ]},
+  {id:10,country:'fr',date:'Jue Oct 15',title:'Versailles → Estrasburgo 🏰',sub:'🇫🇷 Palacio + TGV Ouigo → Petite France',
+   acts:[
+    {t:'08:00',type:'transport',name:'🚂 RER C → Versailles-Château',desc:'Desde Gare Saint-Michel. 35min. Bajarse en Versailles-Château Rive Gauche.',cost:[3.60,'€/pax (solo ida)'],badges:[]},
+    {t:'09:00',type:'paid',name:'⭐ Palacio de Versailles',desc:'Galería de los Espejos, Apartamentos de Luis XIV. Jardines: GRATIS (€9 solo días de fuentes). Octubre = colores otoñales espectaculares.',cost:[20,'€/pax (jardines gratis)'],badges:['TOP','RESERVAR']},
+    {t:'13:00',type:'food',name:'🥖 Almuerzo en jardines Versailles',desc:'Baguette + queso comprado en boulangerie del pueblo. Comer en los jardines del palacio. Mucho más barato que restaurantes internos.',cost:[6,'€/pax'],badges:['SAVE']},
+    {t:'15:00',type:'transport',name:'🚂 RER regreso → Gare de l\'Est',desc:'Vuelta a París + Metro a la estación del TGV.',cost:[3.60,'€/pax'],badges:[]},
+    {t:'16:00',type:'transport',name:'⭐ 🚅 TGV París Est → Estrasburgo (Ouigo)',desc:'1h47min. Con Ouigo desde €10/pax. Una de las mejores relaciones velocidad/precio en Europa. Reservar con anticipación.',cost:[15,'€/pax (Ouigo)'],badges:['RESERVAR','SAVE']},
+    {t:'18:00',type:'accom',name:'🏠 Check-in Estrasburgo',desc:'Zona Petite France o cerca de la estación central. 10min caminando a todo.',cost:[28,'€/pax · noche'],badges:[]},
+    {t:'18:30',type:'free',name:'⭐ 🆓 Petite France (tarde-noche)',desc:'El barrio de canal más hermoso de Europa. Casas s.XVI sobre el agua. La luz dorada de la tarde es absolutamente mágica.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'19:30',type:'free',name:'🆓 Ponts Couverts + Barrage Vauban',desc:'Puentes medievales del s.XIV. Barrage Vauban: terraza panorámica gratuita con la mejor vista de Estrasburgo.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:30',type:'food',name:'🥧 Cena Winstub alsaciana',desc:'Tarte flambée (masa fina, crème fraîche, lardons, cebolla) + cerveza Kronenbourg. El plato más icónico de Alsacia.',cost:[16,'€/pax'],badges:[]}
+   ]},
+  {id:11,country:'al',date:'Vie Oct 16',title:'Estrasburgo → Heidelberg → Colonia',sub:'🏰→🇩🇪 Catedral · Philosophenweg · ICE',
+   acts:[
+    {t:'08:00',type:'food',name:'🥐 Desayuno alsaciano',desc:'Boulangerie: Kouglof (pan brioche con pasas) + café. El sabor de Alsacia en la mañana.',cost:[5,'€/pax'],badges:[]},
+    {t:'08:30',type:'free',name:'⭐ 🆓 Catedral Notre-Dame Estrasburgo',desc:'Interior GRATIS. Una de las más bellas de Europa. Llegar a las 8:30am antes de grupos organizados. Reloj astronómico a las 12:30h.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'09:30',type:'paid',name:'🗼 Plataforma de la Catedral',desc:'Subir a 66m: vista de Estrasburgo, los Vosgos y la Selva Negra en días claros.',cost:[5,'€/pax'],badges:[]},
+    {t:'10:30',type:'free',name:'🆓 Barrage Vauban + Parc de l\'Orangerie',desc:'Terraza panorámica gratuita. Orangerie: cigüeñas (símbolo de Alsacia), lago, patos.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'12:00',type:'transport',name:'🚅 Tren Estrasburgo → Heidelberg',desc:'ICE o regional. ~45 minutos. Paisaje del Valle del Rin entre Francia y Alemania.',cost:[18,'€/pax'],badges:[]},
+    {t:'13:00',type:'food',name:'🌯 Almuerzo: Döner kebab Heidelberg',desc:'El mejor ratio calidad/precio de Europa. Döner de kebab recién hecho en un puesto local.',cost:[6,'€/pax'],badges:['SAVE']},
+    {t:'13:30',type:'free',name:'⭐ 🆓 Altstadt + Karl-Theodor Brücke',desc:'El puente histórico del s.XVIII con vista al castillo sobre el Neckar. Postcard perfecta de Alemania.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'14:30',type:'free',name:'⭐ 🆓 Philosophenweg (Camino de los Filósofos)',desc:'Sendero elevado con vista al castillo y el Neckar. En octubre comienzan los colores del otoño alemán. Uno de los paseos más bellos de Europa.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'17:30',type:'transport',name:'🚅 ICE Heidelberg → Colonia',desc:'Directo. 1h20min. Uno de los trenes más cómodos de Alemania.',cost:[35,'€/pax'],badges:['RESERVAR']},
+    {t:'19:00',type:'free',name:'⭐ 🆓 Catedral Colonia (primera vista nocturna)',desc:'La estación de Colonia está justo enfrente. Primera impresión al salir del tren: devastadora. Iluminada de noche es impresionante.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'20:00',type:'food',name:'🍺 Cena Kölsch + Reibekuchen',desc:'Reibekuchen (tortitas de patata) + Kölsch (€2.50/vaso). La cerveza de Colonia que solo existe en Colonia.',cost:[13,'€/pax'],badges:[]}
+   ]},
+  {id:12,country:'de',date:'Sáb Oct 17',title:'Colonia 🍫',sub:'🇩🇪 Catedral (gratis) · Chocolate · Rin',
+   acts:[
+    {t:'08:30',type:'food',name:'☕ Desayuno Bäckerei local',desc:'Pretzel + quark (queso fresco) + café. El desayuno típico del Rin.',cost:[4,'€/pax'],badges:[]},
+    {t:'09:00',type:'free',name:'⭐ 🆓 Catedral de Colonia (interior)',desc:'GRATIS entrar. Una de las catedrales góticas más grandes del mundo. Vidrieras medievales, Relicario de los Reyes Magos. 600 años en construcción. Absolutamente impresionante.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'09:45',type:'paid',name:'🗼 Torre Norte Catedral (vista Colonia)',desc:'533 escalones. Vista de Colonia, el Rin y la llanura renana. Vale el esfuerzo.',cost:[6,'€/pax'],badges:[]},
+    {t:'11:00',type:'paid',name:'⭐ Museo del Chocolate (Schokoladenmuseum)',desc:'Fuente de chocolate de 3m donde mojas una galleta. Historia del cacao desde los mayas. Degustaciones. Diferente y memorable para el grupo.',cost:[14,'€/pax'],badges:['TOP']},
+    {t:'13:00',type:'food',name:'🍽️ Almuerzo Fischmarkt o local',desc:'Restaurante local, no turístico. Cerca del Fischmarkt histórico.',cost:[11,'€/pax'],badges:[]},
+    {t:'14:30',type:'free',name:'🆓 Hohenzollernbrücke + ribera del Rin',desc:'El puente de los candados de amor. Cruzar a Deutz para la mejor foto de la catedral desde el otro lado del río.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:00',type:'free',name:'🆓 Belgisches Viertel (barrio hip)',desc:'El barrio más cool de Colonia. Tiendas vintage, galerías, cafés artesanales. Pasear y observar.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:00',type:'food',name:'🍺 Cena Brauhaus Früh am Dom',desc:'La cervecería más famosa de Colonia, frente a la catedral. Kölsch + Himmel un Ääd (morcilla y puré, plato típico).',cost:[16,'€/pax'],badges:[]}
+   ]},
+  {id:13,country:'fi',date:'Dom Oct 18',title:'Colonia → Florencia 🌸',sub:'✈️ Vuelo + Duomo + Ponte Vecchio',
+   acts:[
+    {t:'06:30',type:'transport',name:'🚂 S-Bahn S19 → Aeropuerto Cologne Bonn (CGN)',desc:'Desde Köln Hbf. 20min.',cost:[3.20,'€/pax'],badges:[]},
+    {t:'09:30',type:'transport',name:'✈️ Vuelo CGN → PSA (Pisa)',desc:'Ryanair o Eurowings. 1h45min. Reservar 2+ meses antes para precio bajo.',cost:[55,'€/pax'],badges:['RESERVAR','SAVE']},
+    {t:'12:00',type:'transport',name:'🚂 Tren Pisa → Florencia SMN',desc:'Regional. 1h. Frecuente y cómodo. (Opcional 30min en Pisa: foto Torre, exterior gratis.)',cost:[9.30,'€/pax'],badges:[]},
+    {t:'13:30',type:'accom',name:'🏠 Check-in Florencia (Oltrarno o Santa Croce)',desc:'Oltrarno: más auténtico, cruzando el Arno. Santa Croce: central pero menos caro que Duomo.',cost:[33,'€/pax · noche'],badges:['SAVE']},
+    {t:'14:30',type:'food',name:'🥪 Almuerzo Mercato Centrale',desc:'Panino con lampredotto (€5–6) o schiacciata (focaccia, €3). La comida de calle más auténtica de Florencia.',cost:[6,'€/pax'],badges:['SAVE']},
+    {t:'15:30',type:'free',name:'⭐ 🆓 Piazza del Duomo',desc:'Catedral gratis entrar. Ver la Cúpula de Brunelleschi desde la plaza es GRATIS y ya es una experiencia única.',cost:[0,'Gratis (catedral gratis)'],badges:['FREE','TOP']},
+    {t:'17:00',type:'free',name:'🆓 Piazza della Signoria + Loggia dei Lanzi',desc:'Galería de esculturas al aire libre: Perseo de Cellini, Ercole e Caco. GRATIS. El salón de estar de Florencia.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'18:30',type:'free',name:'⭐ 🆓 Ponte Vecchio (atardecer)',desc:'El puente de joyeros más famoso del mundo sobre el Arno. Al atardecer la luz dorada es absolutamente mágica. Cruzarlo es gratis.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'20:00',type:'food',name:'🍷 Cena trattoria Oltrarno',desc:'Pasta ribollita o pappardelle al cinghiale (jabali) + vino Chianti de la casa. Restaurante familiar.',cost:[20,'€/pax'],badges:[]}
+   ]},
+  {id:14,country:'fi',date:'Lun Oct 19',title:'Florencia Arte ⭐',sub:'🌸 Uffizi · David · Piazzale Michelangelo',
+   acts:[
+    {t:'07:30',type:'food',name:'☕ Cappuccino + Cornetto (de pie)',desc:'En cualquier bar local. €2.50 DE PIE vs. €8 sentado. La regla de oro italiana: siempre al bancone (barra).',cost:[2.50,'€/pax'],badges:['SAVE']},
+    {t:'08:30',type:'paid',name:'⭐ Galería degli Uffizi',desc:'Botticelli (Nacimiento de Venus, Primavera), Rafael, Leonardo, Caravaggio, Tiziano. Una de las experiencias de arte más importantes del mundo. Reservar meses antes.',cost:[24,'€/pax (€20 + €4 reserva)'],badges:['TOP','RESERVAR']},
+    {t:'12:30',type:'food',name:'🍦 Almuerzo ligero + gelato',desc:'Schiacciata (€3–4) + gelato artesanal (€2.50). Come en la piazza, vive el ambiente florentino.',cost:[5,'€/pax'],badges:['SAVE']},
+    {t:'13:30',type:'paid',name:'⭐ Galería de la Academia (El David)',desc:'El David de Miguelángel (5.17m). La escultura más famosa del mundo. También los Prisioneros inacabados. Reservar online.',cost:[12,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'15:30',type:'free',name:'🆓 Mercato Centrale + San Lorenzo',desc:'Mercado histórico. Piso superior: mercado gourmet. San Lorenzo: tiendas de cuero artesanal.',cost:[0,'Gratis (consumir opcional)'],badges:['FREE']},
+    {t:'16:30',type:'free',name:'⭐ 🆓 Piazzale Michelangelo (atardecer)',desc:'La mejor panorámica de Florencia. Arno, Cúpula Brunelleschi, colinas toscanas. Subir 20min a pie o bus 13 (€1.50). Imprescindible.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'18:30',type:'free',name:'🆓 Basílica San Miniato al Monte',desc:'Basílica románica del s.XI sobre la colina. Mosaicos medievales. 5min del Piazzale. Casi siempre vacía.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'⭐ Cena Bistecca Fiorentina',desc:'El plato estrella de Florencia. Compartir el chuletón de ternera chianina entre 3. Vino Chianti Classico. El gran festín toscano.',cost:[25,'€/pax'],badges:['TOP']}
+   ]},
+  {id:15,country:'it',date:'Mar Oct 20',title:'Florencia → Roma 🏛️',sub:'🚅 Frecciarossa + Trastevere + Aventino',
+   acts:[
+    {t:'08:30',type:'transport',name:'🚅 Frecciarossa Florencia → Roma Termini',desc:'1h33min. Sale cada 30min. Comprar online con anticipación para mejor precio.',cost:[35,'€/pax'],badges:['RESERVAR']},
+    {t:'11:30',type:'accom',name:'🏠 Check-in Roma (Pigneto o Ostiense)',desc:'Pigneto: €20–25 más barato/noche que Trastevere. 15min metro al centro. Auténtico y artístico.',cost:[35,'€/pax · noche'],badges:['SAVE']},
+    {t:'13:00',type:'food',name:'🍕 Almuerzo Testaccio',desc:'Supplì (croqueta de arroz, €1.50 c/u) + pizza al taglio (€3–5 trozo). El barrio más auténtico de Roma. Evita restaurantes cerca al Coliseo.',cost:[8,'€/pax'],badges:['SAVE']},
+    {t:'14:00',type:'free',name:'⭐ 🆓 Trastevere',desc:'El barrio más romántico de Roma. Callejuelas medievales empedradas, hiedra, fuentes barrocas. Basílica Santa Maria in Trastevere: mosaicos del s.XII, gratis.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'16:00',type:'free',name:'⭐ 🆓 Agujero de la cerradura (Aventino)',desc:'EL secreto de Roma: Via di Sant\'Anselmo 2. Un agujero en la puerta de los Caballeros de Malta desde el que se ve la cúpula de San Pedro perfectamente encuadrada. GRATIS y absolutamente mágico.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'17:30',type:'free',name:'🆓 Circo Máximo + Testaccio',desc:'El hipódromo más grande del Imperio Romano. Hoy es un parque. Vista al Palatino. Completamente gratis.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'🍝 Primera cena romana',desc:'Cacio e pepe o carbonara auténtica (solo en Roma). Trattoria familiar en Testaccio o Trastevere.',cost:[16,'€/pax'],badges:[]}
+   ]},
+  {id:16,country:'it',date:'Mié Oct 21',title:'Ciudad del Vaticano ✝️',sub:'🏛️ Museos Vaticanos · Sixtina · San Pedro',
+   acts:[
+    {t:'08:30',type:'transport',name:'🚇 Metro A → Ottaviano (Vaticano)',desc:'20min desde Termini. Con tarjeta de metro.',cost:[1.50,'€/pax'],badges:[]},
+    {t:'09:00',type:'paid',name:'⭐ Museos Vaticanos + Capilla Sixtina',desc:'El fresco de Miguelángel (La Creación). Galería de Mapas, Stanze di Raffaello. RESERVAR CON 60 DÍAS en museivaticani.va. Sin reserva: 3–4h de cola y posible sold-out.',cost:[20,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'13:00',type:'free',name:'⭐ 🆓 Basílica de San Pedro',desc:'La iglesia más grande del mundo. Pietà de Miguelángel, baldaquino de Bernini. GRATIS entrar. Cúpula: €6 escaleras o €8 ascensor (vale la pena la vista).',cost:[0,'Gratis (cúpula €6–8 opcional)'],badges:['FREE','TOP']},
+    {t:'15:30',type:'free',name:'🆓 Plaza de San Pedro + barrio Prati',desc:'Columnatas de Bernini. Guardia Suiza. Prati: barrio residencial con restaurantes locales más económicos.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'19:00',type:'food',name:'🍕 Cena pizza romana (Prati)',desc:'Pizza romana: base finísima y crujiente. Restaurante local en Prati, más económico que el área turística.',cost:[17,'€/pax'],badges:[]}
+   ]},
+  {id:17,country:'it',date:'Jue Oct 22',title:'Coliseo + Foro Romano 🏟️',sub:'🏛️ El corazón del Imperio Romano',
+   acts:[
+    {t:'08:30',type:'paid',name:'⭐ Coliseo + Foro Romano + Palatino',desc:'El anfiteatro más grande del mundo. 2.000 años de historia. RESERVAR en colosseo.it (se agota antes de las 10am en taquilla).',cost:[18,'€/pax (combo 3 sitios)'],badges:['TOP','RESERVAR']},
+    {t:'10:30',type:'free',name:'⭐ 🆓 Foro Romano + Monte Palatino',desc:'Incluido en el tiquete del Coliseo. El corazón del Imperio: Arco de Tito, Templo de Saturno. Palatino da la mejor vista del Foro.',cost:[0,'Incluido en Coliseo'],badges:['FREE','TOP']},
+    {t:'13:00',type:'food',name:'🥗 Almuerzo (no junto al Coliseo)',desc:'Alejarse 5min del Coliseo = mitad de precio. Celio o Testaccio: menú completo local.',cost:[11,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'free',name:'🆓 Bocca della Verità + Trastevere',desc:'La Boca de la Verdad (Piazza Bocca della Verità). Donación opcional. Luego paseo por Trastevere.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:00',type:'free',name:'⭐ 🆓 Barrio de Monti',desc:'El barrio más auténtico y artístico de Roma. Mercatino de antigüedades, tiendas vintage. El verdadero espíritu romano.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'17:30',type:'food',name:'🍹 Aperitivo romano en Monti',desc:'Campari Spritz o Negroni. Muchos bares incluyen free snacks en el aperitivo (17–20h). Ritual local.',cost:[5,'€/pax'],badges:['SAVE']},
+    {t:'19:30',type:'food',name:'🍝 Cena Osteria de Monti',desc:'Pasta all\'amatriciana (guanciale, pecorino, tomate). Vino a €3 el vaso en osteria con mantel de papel.',cost:[16,'€/pax'],badges:[]}
+   ]},
+  {id:18,country:'it',date:'Vie Oct 23',title:'Trevi + Panteón + Borghese 💎',sub:'🏛️ Centro histórico · Galería Borghese',
+   acts:[
+    {t:'07:30',type:'free',name:'⭐ 🆓 Fuente de Trevi (madrugada)',desc:'Llegar ANTES de las 8am: la tendrás casi sola. El resto del día hay cientos de turistas.',cost:[0,'Gratis (verificar tarifa 2026)'],badges:['FREE','TOP']},
+    {t:'09:00',type:'free',name:'🆓 Scalinata di Spagna + Piazza',desc:'Los 135 peldaños más famosos del mundo. Fuente Barcaccia de Bernini en la plaza.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'10:00',type:'paid',name:'⭐ Panteón',desc:'2.000 años perfectamente conservado. La cúpula sin armar más grande del mundo. Tumba de Rafael.',cost:[5,'€/pax'],badges:['TOP']},
+    {t:'11:00',type:'free',name:'⭐ 🆓 Piazza Navona',desc:'La plaza barroca más bella de Roma. Fuente de los Cuatro Ríos de Bernini. Artistas, músicos. El salón de la ciudad.',cost:[0,'Gratis'],badges:['FREE','TOP']},
+    {t:'12:30',type:'food',name:'🛒 Almuerzo Campo de\' Fiori',desc:'Mercado matutino (cierra 14h). Comprar mozzarella, pan, frutas. Comer en la plaza a precio de mercado.',cost:[9,'€/pax'],badges:['SAVE']},
+    {t:'15:00',type:'paid',name:'⭐ Galleria Borghese',desc:'Las mejores esculturas del mundo. Bernini (Apolo y Dafne), Caravaggio, Tiziano. CUPOS MUY LIMITADOS. RESERVAR CON MESES DE ANTICIPACIÓN en galleriaborghese.it.',cost:[17,'€/pax (€15 + €2 reserva)'],badges:['TOP','RESERVAR']},
+    {t:'17:30',type:'free',name:'🆓 Villa Borghese (jardines)',desc:'Los jardines más grandes del centro de Roma. Lago, Pincio con vista a Piazza del Popolo. Tranquilidad total.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'🍷 Cena trattoria histórica',desc:'Antipasto misto, pasta, secondo, tiramisú, vino. La cena larga italiana como ritual cultural.',cost:[22,'€/pax'],badges:[]}
+   ]},
+  {id:19,country:'it',date:'Sáb Oct 24',title:'Excursión Pompeya 🌋',sub:'🏛️ Ciudad romana congelada en el tiempo',
+   acts:[
+    {t:'07:00',type:'transport',name:'🚅 Tren Roma → Nápoles (Frecciarossa)',desc:'Roma Termini → Napoli Centrale. 1h10min. Reservar anticipado.',cost:[25,'€/pax'],badges:['RESERVAR']},
+    {t:'08:30',type:'transport',name:'🚂 Circumvesuviana → Pompeya Scavi',desc:'Napoli Porta Nolana → Pompei Scavi-Villa dei Misteri. 35min.',cost:[2.80,'€/pax'],badges:[]},
+    {t:'09:15',type:'paid',name:'⭐ Pompeya',desc:'79 d.C.: el Vesubio la congeló en el tiempo. Foro, Casa del Fauno, Lupanare, termas, moldes de víctimas. 4–5h. Llevar agua y calzado cómodo.',cost:[18,'€/pax'],badges:['TOP','RESERVAR']},
+    {t:'14:00',type:'food',name:'⭐ 🍕 Pizza napolitana en Nápoles',desc:'L\'Antica Pizzeria da Michele o similar. La pizza original. Margherita en horno de leña = €5–7. La mejor pizza del mundo.',cost:[6,'€/pax'],badges:['TOP','SAVE']},
+    {t:'15:30',type:'transport',name:'🚅 Nápoles → Roma Termini',desc:'Frecciarossa de regreso. 1h10min.',cost:[25,'€/pax'],badges:[]},
+    {t:'18:00',type:'free',name:'🆓 Paseo Lungotevere + descanso',desc:'Ribera del Tíber. Paseo tranquilo. Descanso después del día intenso en Pompeya.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'🍕 Cena ligera (pizza al taglio)',desc:'Pizza por trozo en bar local: €3–5. Noche de descanso post-excursión.',cost:[5,'€/pax'],badges:['SAVE']}
+   ]},
+  {id:20,country:'it',date:'Dom Oct 25',title:'Ostia Antica + Via Appia ⭐',sub:'🏛️ La Pompeya de Roma (sin turistas)',
+   acts:[
+    {t:'09:00',type:'transport',name:'🚇 Metro B → Ostiense → tren Ostia',desc:'Con tarjeta metro diaria (€7). Metro B hasta Piramide + tren regional.',cost:[1.50,'€/pax (tarjeta metro)'],badges:[]},
+    {t:'09:30',type:'paid',name:'⭐ Ostia Antica',desc:'La Pompeya de Roma pero SIN TURISTAS. Mosaicos de 2.000 años, teatro, bloques de apartamentos. Absolutamente impresionante. Casi nadie la conoce.',cost:[12,'€/pax'],badges:['TOP']},
+    {t:'13:00',type:'food',name:'🥗 Almuerzo local o picnic',desc:'Llevar picnic preparado o comer en el pueblo de Ostia (restaurantes asequibles fuera de Roma).',cost:[9,'€/pax'],badges:['SAVE']},
+    {t:'15:00',type:'free',name:'⭐ 🆓 Via Appia Antica',desc:'La calzada más antigua del mundo (312 a.C.). Caminar entre pinos centenarios y tumbas romanas. Alquilar bicicleta: €4/h. Una Roma completamente diferente.',cost:[0,'Gratis (bici €4)'],badges:['FREE','TOP']},
+    {t:'17:00',type:'paid',name:'Catacumbas de San Callisto',desc:'Km de túneles del s.II–IV d.C. Guía incluido. Solo visita guiada. Impresionante y completamente distinto.',cost:[8,'€/pax'],badges:[]},
+    {t:'18:30',type:'food',name:'🍹 Aperitivo Trastevere',desc:'Aperol Spritz o Negroni al atardecer en Trastevere. El atardecer sobre las piedras medievales es perfecto.',cost:[5,'€/pax'],badges:[]},
+    {t:'20:00',type:'food',name:'⭐ Cena de despedida Italia',desc:'Cena larga: antipasto, pasta, secondo (abbacchio romano), tiramisú casero, vino Frascati. El ritual gastronómico italiano completo.',cost:[30,'€/pax'],badges:['TOP']}
+   ]},
+  {id:21,country:'it',date:'Lun Oct 26',title:'Último día Roma 🛍️',sub:'🏛️ Porta Portese · Gianicolo · Gelato final',
+   acts:[
+    {t:'07:00',type:'free',name:'⭐ 🆓 Mercato Porta Portese (solo domingos)',desc:'El mercadillo más grande de Roma. Ropa vintage, antigüedades, libros de segunda mano, vinilos. La Roma popular auténtica. 7–14h. GRATIS entrar.',cost:[0,'Gratis (compras opcionales)'],badges:['FREE','TOP']},
+    {t:'11:00',type:'free',name:'🆓 Gianicolo (cañonazo 12h)',desc:'La mejor vista panorámica de Roma. Cañonazo diario al mediodía (tradición desde 1847). Picnic con la mejor vista de la ciudad.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'12:30',type:'food',name:'🥗 Picnic Gianicolo con vista',desc:'Comprar en salumeria o mercado. Comer con la vista panorámica de Roma. La despedida perfecta.',cost:[7,'€/pax'],badges:['SAVE']},
+    {t:'14:30',type:'free',name:'🆓 Villa Borghese (jardines) — último paseo',desc:'Lago con barcas (€3), músicos callejeros, familias romanas en domingo. La Roma real y cotidiana.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'16:30',type:'transport',name:'🧳 Check-out + consigna Termini',desc:'Maletas en consigna mientras disfrutas el último atardecer libre.',cost:[6,'€/bolso'],badges:[]},
+    {t:'18:00',type:'free',name:'🆓 Última passeggiata romana',desc:'Piazza del Popolo → Via del Corso → Piazza Navona → Campo de\' Fiori. El ritual vespertino romano de los domingos.',cost:[0,'Gratis'],badges:['FREE']},
+    {t:'20:00',type:'food',name:'🍦 Última cena + gelato final',desc:'Pizza al taglio (€3–5) + gelato artesanal en Come il Latte o Giolitti (€3). El cierre perfecto de Italia.',cost:[8,'€/pax'],badges:['SAVE']}
+   ]},
+  {id:22,country:'it',date:'Mar Oct 27',title:'Roma ✈️ Bogotá 🏠',sub:'Leonardo Express → Vuelo de regreso',
+   acts:[
+    {t:'05:00',type:'food',name:'☕ Último cappuccino en Roma',desc:'Bar 24h o desayuno preparado. El último sabor de Italia.',cost:[2.50,'€/pax'],badges:[]},
+    {t:'06:00',type:'transport',name:'🚂 Leonardo Express → Aeropuerto FCO',desc:'Roma Termini → Fiumicino. Sale cada 30min. 32min directo. El más rápido y seguro.',cost:[14,'€/pax'],badges:[]},
+    {t:'07:00',type:'transport',name:'✈️ Check-in FCO (3h antes)',desc:'Terminal T1 o T3 según aerolínea. Emigración, seguridad, boarding.',cost:[0,'Incluido en vuelo'],badges:[]},
+    {t:'10:00',type:'transport',name:'✈️ Vuelo FCO → Bogotá (regreso)',desc:'Con escala. ~12–14h total. Llegada a Bogotá tarde/noche del 27 de octubre.',cost:[500,'USD one-way/pax (en presupuesto vuelos)'],badges:['RESERVAR']}
+   ]}
+];
+
+const bookings=[
+  {n:'Torre Eiffel (cima)',w:'60 días antes — AHORA MISMO',u:'https://www.toureiffel.paris',hot:true},
+  {n:'Galería Borghese (Roma)',w:'Meses antes — CUPOS MUY LIMITADOS',u:'https://galleriaborghese.it',hot:true},
+  {n:'Museos Vaticanos + Sixtina',w:'60 días antes',u:'https://www.museivaticani.va',hot:true},
+  {n:'Vuelos BOG→LIS y FCO→BOG',w:'3–4 meses antes',u:'https://flights.google.com',hot:true},
+  {n:'Alojamiento París',w:'3+ meses antes',u:'https://www.airbnb.com',hot:true},
+  {n:'Galería Uffizi (Florencia)',w:'2+ meses antes',u:'https://www.uffizi.it',hot:false},
+  {n:'Coliseo + Foro Romano',w:'1+ mes antes',u:'https://www.colosseo.it',hot:false},
+  {n:'Galería Academia (El David)',w:'1+ mes antes',u:'https://galleriaaccademiafirenze.it',hot:false},
+  {n:'Palácio da Pena (Sintra)',w:'2+ semanas antes',u:'https://parquesdesintra.pt',hot:false},
+  {n:'AVE Madrid→Barcelona (Ouigo)',w:'2+ meses antes',u:'https://www.ouigo.com',hot:false},
+  {n:'TGV Barcelona→París (Ouigo)',w:'2+ meses antes',u:'https://www.trainline.com',hot:false},
+  {n:'Versailles',w:'2+ semanas antes',u:'https://en.chateauversailles.fr',hot:false},
+  {n:'Musée du Louvre',w:'1+ semana antes',u:'https://www.louvre.fr',hot:false}
+];
+
+function badgeHTML(b){
+  const m={FREE:'<span class="badge b-free">GRATIS</span>',TOP:'<span class="badge b-star">⭐ TOP</span>',RESERVAR:'<span class="badge b-book">📅 RESERVAR</span>',SAVE:'<span class="badge b-save">💰 AHORRO</span>'};
+  return(b||[]).map(x=>m[x]||'').join(' ');
+}
+
+function formatCost(c,type){
+  const[pax,label]=c;
+  if(pax===0) return{paxHTML:'<span class="cost-free">€0</span>',totalHTML:'<span class="cost-free">€0</span>',paxLabel:'Gratis',totalLabel:'Gratis'};
+  const sym=label.includes('USD')?'':'€';
+  const total=(pax*3).toFixed(2).replace('.00','').replace(/\.(\d)$/,'.$10');
+  const paxStr=label.includes('USD')?`~$${pax}`:`€${pax}`;
+  const totalStr=label.includes('USD')?`~$${(pax*3).toFixed(0)}`:`€${(pax*3).toFixed(2).replace('.00','').replace(/\.(\d)$/,'.$10')}`;
+  const cls='cost-'+type;
+  return{
+    paxHTML:`<span class="${cls}">${paxStr}</span>`,
+    totalHTML:`<span class="${cls}" style="font-weight:800">${totalStr}</span>`,
+    paxLabel:label,totalLabel:label
+  };
+}
+
+function renderRealMadrid(dayId){
+  // ✅ PARTIDO CONFIRMADO: Real Madrid vs. Villarreal — LaLiga J7 — 10-11 Oct en Bernabéu
+  let matchBanner='';
+  if(dayId===5){
+    matchBanner=`<div style="background:#dcfce7;border:2px solid #16a34a;border-radius:9px;padding:11px 13px;margin-bottom:10px">
+      <div style="font-weight:800;font-size:.85rem;color:#14532d;margin-bottom:4px">🎉 ¡PARTIDO CONFIRMADO EN TU ESTADÍA! — Sáb Oct 10</div>
+      <div style="font-size:.79rem;color:#166534;line-height:1.5"><strong>Real Madrid vs. Villarreal</strong> · LaLiga J7 · Bernabéu<br>
+      Horario habitual: 18:30h o 21:00h. Puedes visitar museos por la mañana y asistir al partido por la tarde-noche. <strong>Día perfecto</strong> para combinar cultura + fútbol.</div>
+    </div>`;
+  } else if(dayId===6){
+    matchBanner=`<div style="background:#fefce8;border:2px solid #ca8a04;border-radius:9px;padding:10px 12px;margin-bottom:10px">
+      <div style="font-weight:800;font-size:.82rem;color:#92400e;margin-bottom:3px">⚠️ Posible partido Dom Oct 11 — confirmar hora</div>
+      <div style="font-size:.76rem;color:#713f12;line-height:1.5"><strong>Real Madrid vs. Villarreal</strong> puede ser el domingo. Si el horario es 12:00–14:00h, puedes verlo antes de tomar el AVE a Barcelona. El día de salida a París es flexible si el partido es a mediodía.</div>
+    </div>`;
+  } else {
+    matchBanner=`<div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:.75rem;color:#1e40af">
+      📅 El partido confirmado <strong>Real Madrid vs. Villarreal</strong> (LaLiga J7) es el <strong>Oct 10–11</strong>. El mejor día para asistir es el <strong>Sáb Oct 10</strong>.
+    </div>`;
+  }
+  return`
+  <div class="alt-block">
+    <div class="alt-header">
+      ⚽ Real Madrid vs. Villarreal — Bernabéu
+      <span class="alt-header-badge">✅ CONFIRMADO OCT 10–11</span>
+    </div>
+
+    ${matchBanner}
+
+    <table class="alt-table">
+      <thead><tr><th>Tipo de entrada</th><th>Por pax</th><th>Total 3 pax</th></tr></thead>
+      <tbody>
+        <tr class="alt-highlight"><td>🟢 Fondo / Lateral (LaLiga vs. Villarreal)</td><td>€40–70</td><td>€120–210</td></tr>
+        <tr><td>🟡 Tribuna / Preferente</td><td>€80–130</td><td>€240–390</td></tr>
+        <tr><td>🔴 El Clásico (25 Oct en Camp Nou — no aplica)</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <div style="font-size:.75rem;font-weight:700;color:#7f1d1d;margin-bottom:6px">🎟️ Dónde comprar (de más barato a más caro):</div>
+    <table class="alt-table">
+      <thead><tr><th>Canal</th><th>Precio aprox.</th><th>Total 3 pax</th></tr></thead>
+      <tbody>
+        <tr class="alt-highlight"><td>✅ Web oficial realmadrid.com</td><td>€40–70</td><td>€120–210</td></tr>
+        <tr><td>✅ entradas.com (canal oficial)</td><td>€40–70</td><td>€120–210</td></tr>
+        <tr><td>🔶 SeatPick.com (reventa legal)</td><td>€60–120</td><td>€180–360</td></tr>
+        <tr><td>🔶 Koobit.com (reventa legal)</td><td>€65–130</td><td>€195–390</td></tr>
+        <tr><td>❌ Revendedores en la calle</td><td colspan="2" style="color:#dc2626;text-align:center">⚠️ Evitar — riesgo de fraude</td></tr>
+      </tbody>
+    </table>
+
+    <div class="alt-tour">
+      <strong>🏟️ Alternativa: Tour del Bernabéu (€35/pax · €105 para 3)</strong>
+      Vestuarios, túnel, palco presidencial, museo de trofeos, cubierta retráctil. Reserva en realmadrid.com/tour-bernabeu. Complementa muy bien el día aunque tengas entrada.
+    </div>
+
+    <div class="alt-links">
+      <a class="alt-link primary" href="https://www.realmadrid.com/es-ES/futbol/partidos/entradas" target="_blank">🎟️ Comprar entradas</a>
+      <a class="alt-link secondary" href="https://www.realmadrid.com/es-ES/calendario" target="_blank">📅 Calendario oficial</a>
+      <a class="alt-link secondary" href="https://seatpick.com/es/entradas-real-madrid" target="_blank">🔶 SeatPick</a>
+      <a class="alt-link secondary" href="https://www.realmadrid.com/es-ES/tour-bernabeu/individual" target="_blank">🏟️ Tour Bernabéu</a>
+    </div>
+  </div>`;
+}
+
+/* ---- NOTES PER ACTIVITY ---- */
+function getNotes(){return JSON.parse(localStorage.getItem('actNotes')||'{}')}
+
+function toggleNoteForm(k){
+  const el=document.getElementById('nf-'+k);
+  if(!el) return;
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  if(!isOpen){const ta=document.getElementById('ntxt-'+k);if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);}}
+}
+
+function saveNote(k,dayId){
+  const ta=document.getElementById('ntxt-'+k);
+  if(!ta) return;
+  const text=ta.value.trim();
+  if(!text){ta.focus();ta.style.borderColor='#ef4444';setTimeout(()=>ta.style.borderColor='',1500);return;}
+  const typeEl=document.querySelector(`input[name="ntype-${k}"]:checked`);
+  const type=typeEl?typeEl.value:'reserva';
+  const notes=getNotes();
+  const now=new Date();
+  notes[k]={type,text,date:now.toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'})};
+  localStorage.setItem('actNotes',JSON.stringify(notes));
+  const card=document.getElementById('day-'+dayId);
+  const wasOpen=card&&card.classList.contains('open');
+  renderDays();
+  if(wasOpen){const c2=document.getElementById('day-'+dayId);if(c2)c2.classList.add('open');}
+}
+
+function deleteNote(k,dayId){
+  if(!confirm('¿Eliminar esta nota?')) return;
+  const notes=getNotes();
+  delete notes[k];
+  localStorage.setItem('actNotes',JSON.stringify(notes));
+  const card=document.getElementById('day-'+dayId);
+  const wasOpen=card&&card.classList.contains('open');
+  renderDays();
+  if(wasOpen){const c2=document.getElementById('day-'+dayId);if(c2)c2.classList.add('open');}
+}
+
+function renderDays(){
+  const el=document.getElementById('main');
+  el.innerHTML=days.map(day=>{
+    const col=COLORS[day.country]||'#2563eb';
+    const flag=FLAG[day.country]||'🌍';
+    // Day totals
+    const dayTotalPax=day.acts.reduce((s,a)=>{
+      const p=a.cost[0];
+      return a.cost[1].includes('USD')?s:s+(typeof p==='number'?p:0);
+    },0);
+    const dayTotal3=dayTotalPax*3;
+
+    const notes=getNotes();
+    const actsHTML=day.acts.map((act,i)=>{
+      const isLast=i===day.acts.length-1;
+      const dotCol=C[act.type]||'#64748b';
+      const costInfo=formatCost(act.cost,act.type);
+      const nk=`${day.id}_${i}`;
+      const note=notes[nk];
+      const noteDisplay=note?`
+        <div class="note-display note-${note.type}">
+          <div style="flex:1;min-width:0">
+            <div class="note-type-label">${note.type==='reserva'?'📋 Reserva confirmada':'💬 Comentario'}</div>
+            <div class="note-text">${note.text.replace(/</g,'&lt;')}</div>
+            <div class="note-date">🕐 ${note.date}</div>
+          </div>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button class="note-edit-btn" onclick="toggleNoteForm('${nk}')" title="Editar">✏️</button>
+            <button class="note-del-btn" onclick="deleteNote('${nk}',${day.id})" title="Eliminar">🗑️</button>
+          </div>
+        </div>`:
+      '';
+      const noteForm=`
+        <div id="nf-${nk}" style="display:none">
+          <div class="note-form-wrap">
+            <div style="display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap">
+              <label style="font-size:.73rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">
+                <input type="radio" name="ntype-${nk}" value="reserva" ${!note||note.type==='reserva'?'checked':''}> 📋 Reserva confirmada
+              </label>
+              <label style="font-size:.73rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px">
+                <input type="radio" name="ntype-${nk}" value="comentario" ${note&&note.type==='comentario'?'checked':''}> 💬 Comentario
+              </label>
+            </div>
+            <textarea id="ntxt-${nk}" class="note-textarea" placeholder="Ej: Confirmación #ABC123 · Hora 18:30 · 3 personas · Pago €78 · Ref. Booking XYZ...">${note?note.text.replace(/</g,'&lt;'):''}</textarea>
+            <div style="display:flex;gap:6px;margin-top:6px;align-items:center">
+              <button class="note-save-btn" onclick="saveNote('${nk}',${day.id})">💾 Guardar</button>
+              <button class="note-cancel-btn" onclick="toggleNoteForm('${nk}')">Cancelar</button>
+              ${note?`<span style="font-size:.68rem;color:#94a3b8;margin-left:auto">Guardado: ${note.date}</span>`:''}
+            </div>
+          </div>
+        </div>`;
+      const noteBtn=`<button class="note-add-btn ${note?'has-note':''}" onclick="toggleNoteForm('${nk}')">${note?'✏️ Editar nota / reserva':'📝 Añadir nota o reserva'}</button>`;
+      return`<div class="act-row">
+        <div class="act-main">
+          <div class="act-timeline">
+            <div class="act-dot2" style="background:${dotCol}"></div>
+            ${!isLast?`<div class="act-vline" style="background:${dotCol}33"></div>`:''}
+          </div>
+          <div class="act-body">
+            <div class="act-time-label">${act.t}</div>
+            <div class="act-card ${act.type}">
+              <div class="act-name">${act.name} ${badgeHTML(act.badges)}</div>
+              <div class="act-desc">${act.desc}</div>
+              ${act.cost[1]&&act.cost[0]>0?`<div style="font-size:.68rem;color:var(--muted);margin-top:3px">📌 ${act.cost[1]}</div>`:''}
+              ${(act.badges||[]).includes('SAVE')?`<div class="act-save-tip">💡 Truco de ahorro aplicado en este costo</div>`:''}
+            </div>
+            ${noteDisplay}
+            ${noteForm}
+            ${noteBtn}
+          </div>
+        </div>
+        <div class="cost-cell">${costInfo.paxHTML}</div>
+        <div class="cost-cell">${costInfo.totalHTML}</div>
+      </div>`;
+    }).join('');
+
+    return`<div class="day-card" data-country="${day.country}" id="day-${day.id}">
+      <div class="day-header" onclick="toggleDay(${day.id})">
+        <div class="day-num" style="background:${col}">${flag}<br>Día ${day.id+1}</div>
+        <div class="day-info">
+          <div class="day-title">${day.date} — ${day.title}</div>
+          <div class="day-sub">${day.sub}</div>
+        </div>
+        <div class="day-costs">
+          <div class="cost-unit">Por persona</div>
+          <div class="cost-total">€${dayTotalPax.toFixed(0)}</div>
+          <div class="cost-pax">€${dayTotal3.toFixed(0)} total 3 pax</div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="activities">
+        <div class="cost-header"><span>Actividad</span><span>Por pax</span><span>Total 3 pax</span></div>
+        ${actsHTML}
+        <div class="day-total-row">
+          <div class="day-total-label">📊 Total del día (sin vuelos inter.)</div>
+          <div class="day-total-pax">€${dayTotalPax.toFixed(0)}/pax</div>
+          <div class="day-total-3pax">€${dayTotal3.toFixed(0)}</div>
+        </div>
+        ${day.country==='es'?renderRealMadrid(day.id):''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderChecklist(){
+  const c=document.getElementById('checklist');
+  const done=JSON.parse(localStorage.getItem('chk2')||'{}');
+  c.innerHTML=bookings.map((b,i)=>{
+    const isDone=!!done[i];
+    const cls=isDone?'done-item':(b.hot?'urgent-item':'normal-item');
+    return`<div class="check-item ${cls}">
+      <div class="chk ${isDone?'done':''}" onclick="toggleChk(${i})"></div>
+      <div style="flex:1;min-width:0">
+        <a class="check-link ${b.hot&&!isDone?'urgent':''}" href="${b.u}" target="_blank" style="${isDone?'text-decoration:line-through;color:#64748b':''}">${b.n}</a>
+        ${isDone
+          ?'<div class="check-status-done">✅ RESERVADO</div>'
+          :`<div class="check-when">${b.hot?'🔴 URGENTE — ':'⏰ '}${b.w}</div>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+  renderAlertBar(done);
+}
+
+function renderAlertBar(done){
+  const urgent=bookings.filter((b,i)=>b.hot&&!done[i]);
+  const count=document.getElementById('alertCount');
+  const chips=document.getElementById('alertChips');
+  const bar=document.getElementById('alertBar');
+  if(!count||!chips||!bar) return;
+  if(urgent.length===0){
+    bar.style.background='linear-gradient(135deg,#14532d,#16a34a)';
+    count.style.color='#16a34a';
+    count.textContent='✓';
+    chips.innerHTML='<span style="font-size:.8rem;font-weight:700">¡Todas las reservas urgentes completadas! 🎉</span>';
+  } else {
+    bar.style.background='linear-gradient(135deg,#7f1d1d,#dc2626)';
+    count.style.color='#dc2626';
+    count.textContent=urgent.length;
+    chips.innerHTML=urgent.map(b=>`<span class="alert-chip" onclick="window.open('${b.u}','_blank')">${b.n} ↗</span>`).join('');
+  }
+}
+
+function toggleChk(i){
+  const d=JSON.parse(localStorage.getItem('chk2')||'{}');
+  d[i]=!d[i];
+  localStorage.setItem('chk2',JSON.stringify(d));
+  renderChecklist();
+}
+
+function toggleDay(id){document.getElementById(`day-${id}`).classList.toggle('open')}
+
+function filterDays(c,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.day-card').forEach(card=>{
+    card.classList.toggle('hidden',c!=='all'&&card.dataset.country!==c);
+  });
+}
+
+renderDays();
+renderChecklist();
+setTimeout(()=>{const d=document.getElementById('day-1');if(d)d.querySelector('.day-header').click();},100);
+</script>
+</body>
+</html>
+
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text)}
 
